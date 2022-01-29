@@ -1,15 +1,23 @@
 package com.mm.rate_limit.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mm.rate_limit.model.FoassMessage;
+import com.mm.rate_limit.service.FoassService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MessageControllerIntegrationTest {
+
+    @MockBean
+    FoassService foassService;
 
     @LocalServerPort
     int port;
@@ -21,13 +29,15 @@ public class MessageControllerIntegrationTest {
     }
 
     @Test
-    public void getMessageWorks() {
+    public void getMessageWorks() throws JsonProcessingException {
+
+        FoassMessage message = FoassMessage.builder().message("ok").subtitle("st").build();
+        when(foassService.getMessage()).thenReturn(message);
+
         client.get().uri("/message")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class)
-                .consumeWith(result -> {
-                    assertThat(result.getResponseBody()).isNotEmpty();
-                });
+                .expectBody(String.class).isEqualTo(message.toJson())
+                .consumeWith(result -> assertThat(result.getResponseBody()).isNotEmpty());
     }
 }

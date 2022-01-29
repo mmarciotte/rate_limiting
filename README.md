@@ -8,6 +8,20 @@
 
 ## ADRs
 
+## Usage
+
+Run:
+
+```
+mvn spring-boot:run
+```
+
+Get Message:
+
+```
+curl 'localhost:8080/message'
+```
+
 ## Contact
 
 [Matias Marciotte](mailto:mmarciotte@gmail.com)
