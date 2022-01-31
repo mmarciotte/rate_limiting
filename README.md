@@ -8,18 +8,42 @@
 
 ## ADRs
 
+We use micrometer for the metrics because of the easy integration with spring framework
+
 ## Usage
 
-Run:
+#### Requirements
+
+* java SDK v11
+* Docker and docker-compose
+* gnu Makefile
+
+#### Run
 
 ```
-mvn spring-boot:run
+make run
 ```
 
-Get Message:
+#### Get Message:
 
 ```
 curl 'localhost:8080/message'
+```
+
+## Metrics
+
+Access to prometheus panel:
+
+```
+http://localhost:9090/
+```
+
+Search for metrics such as
+
+```
+http_server_requests_seconds_max
+endpoint_message_time_seconds_max
+service_foass_message_time_seconds_max
 ```
 
 ## Contact

@@ -3,16 +3,21 @@ package com.mm.rate_limit.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mm.rate_limit.model.FoassMessage;
 import com.mm.rate_limit.service.FoassService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MessageController {
 
-    @Autowired
+    final
     FoassService foassService;
 
+    public MessageController(FoassService foassService) {
+        this.foassService = foassService;
+    }
+
+    @Timed(value = "endpoint.message.time", description = "Time taken to return message")
     @GetMapping("/message")
     public String message() {
 
