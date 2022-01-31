@@ -7,6 +7,8 @@ import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -32,7 +34,8 @@ public class FoassService {
     }
 
     @Timed(value = "service.foass.message.time", description = "Time taken to get message from FOASS")
-    public FoassMessage getMessage() {
+    @Retryable(value = HttpStatusCodeException.class)
+    public FoassMessage getMessage() throws HttpStatusCodeException {
 
         FoassMessage message = null;
 
@@ -40,19 +43,21 @@ public class FoassService {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<HttpHeaders> request = new HttpEntity<>(headers);
 
-        try {
-            String url = "https://www.foaas.com/cool/matt";
-            ResponseEntity<FoassMessage> response = this.restTemplate.exchange(url, HttpMethod.GET, request, FoassMessage.class);
-            if (response.getStatusCode() == HttpStatus.OK) {
-                message = response.getBody();
-            }
-        } catch (HttpStatusCodeException ex) {
-            logger.error(ex.getMessage());
-            Counter.builder("service.foass.message.error")
-                    .tag("type", ex.getStatusText())
-                    .description("The sum of error getting message")
-                    .register(meterRegistry).increment();
+        String url = "https://www.foaas.com/cool/matt";
+        ResponseEntity<FoassMessage> response = this.restTemplate.exchange(url, HttpMethod.GET, request, FoassMessage.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            message = response.getBody();
         }
         return message;
+    }
+
+    @Recover
+    FoassMessage recover(HttpStatusCodeException ex) {
+        logger.error(ex.getMessage());
+        Counter.builder("service.foass.message.error")
+                .tag("type", ex.getStatusText())
+                .description("The sum of error getting message")
+                .register(meterRegistry).increment();
+        return null;
     }
 }
