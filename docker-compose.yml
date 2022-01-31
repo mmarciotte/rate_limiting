@@ -3,11 +3,11 @@ services:
   message-server:
     container_name: message-server
     build:
-      context: .
+      context: message-server
       dockerfile: Dockerfile
     image: rate_limiting:latest
     ports:
-      - "8080:8080"
+      - "8080:8081"
     networks:
       - spring-cloud-network
   prometheus:

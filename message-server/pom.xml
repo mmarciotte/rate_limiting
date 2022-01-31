@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.mm</groupId>
-    <artifactId>rate_limiting</artifactId>
+    <artifactId>message-server</artifactId>
     <version>0.0.1</version>
-    <name>rate_limiting</name>
-    <description>rate_limiting</description>
+    <name>message-server</name>
+    <description>message-server</description>
     <properties>
         <java.version>11</java.version>
         <spring-cloud.version>2021.0.0</spring-cloud.version>
@@ -20,11 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
