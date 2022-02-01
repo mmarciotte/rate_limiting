@@ -1,0 +1,88 @@
+{
+  "info": {
+    "_postman_id": "d3932526-2e84-48c5-8c85-a11daee722eb",
+    "name": "Rate Limiting",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GetMessage",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Test scenarios",
+              "var repeat = 5;",
+              "var sleep = 10001; // milis",
+              "let currentCount = pm.environment.get(\"counter\");",
+              "",
+              "if (currentCount < eval(repeat)){                             // 200 OK * repeat",
+              "    pm.test(\"Status code is 200\", function () {",
+              "        pm.response.to.have.status(200);",
+              "    });",
+              "    pm.environment.set(\"counter\", eval(currentCount)+1);",
+              "    postman.setNextRequest(\"GetMessage\");",
+              "} else {                                                      // 429 TMR",
+              "    if (currentCount == eval(repeat) ){",
+              "        pm.test(\"Status code is 429\", function () {",
+              "            pm.response.to.have.status(429);",
+              "        });",
+              "        pm.environment.set(\"counter\", eval(currentCount)+1);",
+              "        pm.test(\"sleep 10 seconds...\", function () {});",
+              "        setTimeout(function () {                              // sleep",
+              "            postman.setNextRequest(\"GetMessage\");",
+              "        }, sleep);",
+              "    } else {                                                  // 200 OK",
+              "        pm.test(\"Status code is 200\", function () {",
+              "            pm.response.to.have.status(200);",
+              "        });",
+              "        pm.environment.set(\"counter\", 0);",
+              "    }",
+              "}",
+              "",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text",
+            "disabled": true
+          },
+          {
+            "key": "userId",
+            "value": "1",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "localhost:8080/message",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "message"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

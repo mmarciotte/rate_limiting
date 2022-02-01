@@ -16,31 +16,40 @@ Use JUnit 4 to easy mock service components
 
 ## Usage
 
-#### Requirements
-
+### Requirements
 * java SDK v11
 * Docker and docker-compose
 * gnu Makefile
 
-#### Run
+### Run (on docker container)
 
 ```
 make build
 ```
 
-#### Get Message:
+### Get Message:
 
 ```
 curl 'localhost:8080/message'
+```
+
+### Endpoints documentation
+
+http://localhost:8080/swagger-ui.html
+
+### Functional Testing
+
+Import and run postman collection:
+
+```
+functional-test/postman_collection.json
 ```
 
 ## Metrics
 
 Access to prometheus panel:
 
-```
 http://localhost:9090/
-```
 
 Search for metrics such as
 

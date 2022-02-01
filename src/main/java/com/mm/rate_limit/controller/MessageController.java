@@ -5,6 +5,8 @@ import com.mm.rate_limit.model.FoassMessage;
 import com.mm.rate_limit.service.FoassService;
 import com.mm.rate_limit.service.RateLimiter;
 import io.micrometer.core.annotation.Timed;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +27,11 @@ public class MessageController {
 
     @Timed(value = "endpoint.message.time", description = "Time taken to return message")
     @GetMapping("/message")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "Unauthorized - Invalid User"),
+            @ApiResponse(code = 429, message = "Too Many Requests"),
+    })
     public ResponseEntity<String> message(@RequestHeader(value = "userId", required = false) String userId) throws JsonProcessingException {
 
         ResponseEntity<String> responseEntity = null;
