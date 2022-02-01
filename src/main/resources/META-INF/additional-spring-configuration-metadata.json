@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "ratelimiter.request-allowed",
+      "type": "java.lang.String",
+      "description": "RateLimiter maximum number of accesses."
+    },
+    {
+      "name": "ratelimiter.refresh-seconds",
+      "type": "java.lang.String",
+      "description": "RateLimiter time window."
+    }
+  ]
+}
