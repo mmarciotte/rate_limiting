@@ -4,4 +4,4 @@ build:
 clean:
 	mvn -q clean
 down:
-	docker-composer down
+	docker-compose down
