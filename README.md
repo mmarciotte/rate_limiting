@@ -37,7 +37,7 @@ curl 'localhost:8080/message'
 
 http://localhost:8080/swagger-ui.html
 
-### Functional Testing
+### Integration Test
 
 Import and run postman collection:
 
