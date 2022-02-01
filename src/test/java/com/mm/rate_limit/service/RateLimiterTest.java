@@ -33,7 +33,7 @@ public class RateLimiterTest {
     private StringRedisTemplate stringTemplate;
 
     @Test
-    public void isAllowed_Ok() {
+    public void Test_isAllowed_Ok() {
         List<Long> txResults = Arrays.asList(1L, 2L);
 
         when(stringTemplate.execute(ArgumentMatchers.<SessionCallback<List<Long>>>any())).thenReturn(txResults);
@@ -41,7 +41,7 @@ public class RateLimiterTest {
     }
 
     @Test
-    public void isAllowed_Fail() {
+    public void Test_isAllowed_Fail() {
         List<Long> txResults = Arrays.asList(6L, 7L);
 
         when(stringTemplate.execute(ArgumentMatchers.<SessionCallback<List<Long>>>any())).thenReturn(txResults);

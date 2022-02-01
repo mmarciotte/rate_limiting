@@ -10,6 +10,10 @@
 
 We use micrometer for the metrics because of the easy integration with spring framework
 
+Use redis to store rate limit data to share information between services
+
+Use JUnit 4 to easy mock service components
+
 ## Usage
 
 #### Requirements
@@ -21,7 +25,7 @@ We use micrometer for the metrics because of the easy integration with spring fr
 #### Run
 
 ```
-make run
+make build
 ```
 
 #### Get Message:
@@ -44,6 +48,7 @@ Search for metrics such as
 http_server_requests_seconds_max
 endpoint_message_time_seconds_max
 service_foass_message_time_seconds_max
+service.rate-limiter.allowed.*
 ```
 
 ## Contact
