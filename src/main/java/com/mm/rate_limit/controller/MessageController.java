@@ -44,7 +44,7 @@ public class MessageController {
         return responseEntity;
     }
 
-    @ExceptionHandler({ JsonProcessingException.class})
+    @ExceptionHandler({JsonProcessingException.class})
     public void handleException(JsonProcessingException e) {
         e.printStackTrace();
     }

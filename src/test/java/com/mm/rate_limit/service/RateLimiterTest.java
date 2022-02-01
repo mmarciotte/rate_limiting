@@ -2,6 +2,7 @@ package com.mm.rate_limit.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration;
 import org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration;
@@ -32,18 +33,18 @@ public class RateLimiterTest {
     private StringRedisTemplate stringTemplate;
 
     @Test
-    public void isAllowed_Ok(){
-        List<Long> txResults = Arrays.asList(1l);
+    public void isAllowed_Ok() {
+        List<Long> txResults = Arrays.asList(1L, 2L);
 
-        when(stringTemplate.execute(any(SessionCallback.class))).thenReturn(txResults);
+        when(stringTemplate.execute(ArgumentMatchers.<SessionCallback<List<Long>>>any())).thenReturn(txResults);
         assertTrue(rateLimiter.isAllowed("1"));
     }
 
     @Test
-    public void isAllowed_Fail(){
-        List<Long> txResults = Arrays.asList(6l);
+    public void isAllowed_Fail() {
+        List<Long> txResults = Arrays.asList(6L, 7L);
 
-        when(stringTemplate.execute(any(SessionCallback.class))).thenReturn(txResults);
+        when(stringTemplate.execute(ArgumentMatchers.<SessionCallback<List<Long>>>any())).thenReturn(txResults);
         assertFalse(rateLimiter.isAllowed("1"));
     }
 }

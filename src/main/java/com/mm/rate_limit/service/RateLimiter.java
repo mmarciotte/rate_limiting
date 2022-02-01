@@ -49,7 +49,7 @@ public class RateLimiter {
         });
         assert txResults != null;
         logger.info("User: " + key + " Current request count: " + txResults.get(0));
-        if (txResults.size() > 0 && (Long)txResults.get(0) > requestAllowed) {
+        if (txResults.size() > 0 && (Long) txResults.get(0) > requestAllowed) {
             logger.info("denied");
             return false;
         }

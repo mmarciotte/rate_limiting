@@ -3,7 +3,7 @@ services:
   message-server:
     container_name: message-server
     build:
-      context: message-server
+      context: .
       dockerfile: Dockerfile
     image: rate_limiting:latest
     ports:
