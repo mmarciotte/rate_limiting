@@ -9,11 +9,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Rate Limiter Service
@@ -54,16 +54,21 @@ public class RateLimiter {
                 @Override
                 public <K, V> List<Object> execute(RedisOperations<K, V> operations) throws DataAccessException {
                     final StringRedisTemplate redisTemplate = (StringRedisTemplate) operations;
-                    final ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+                    final ZSetOperations<String, String> valueOperations = redisTemplate.opsForZSet();
+
                     operations.multi();
-                    valueOperations.increment(key);
-                    redisTemplate.expire(key, refreshSeconds, TimeUnit.SECONDS);
+
+                    long now = Instant.now().toEpochMilli();
+                    valueOperations.add(key, key + now, now);
+                    valueOperations.removeRangeByScore(key, 0, now - (refreshSeconds * 1000L));
+                    valueOperations.size(key);
+
                     return operations.exec();
                 }
             });
             assert txResults != null;
-            isAllowed = (txResults.size() > 0 && (Long) txResults.get(0) <= requestAllowed);
-            logger.info("User: " + key + " Current request count: " + txResults.get(0) + " allowed: " + isAllowed);
+            isAllowed = (txResults.size() > 2 && (Long) txResults.get(2) <= requestAllowed);
+            logger.info("User: " + key + " Current request count: " + txResults.get(2) + " allowed: " + isAllowed);
             resultMetrics(key, isAllowed);
         } catch (final Throwable t) {
             logger.warn("Error on redis operation: {}", t.getMessage());
