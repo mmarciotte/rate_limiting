@@ -34,7 +34,7 @@ public class RateLimiterTest {
 
     @Test
     public void Test_isAllowed_Ok() {
-        List<Long> txResults = Arrays.asList(1L, 2L);
+        List<Long> txResults = Arrays.asList(1L, 1L, 1L);
 
         when(stringTemplate.execute(ArgumentMatchers.<SessionCallback<List<Long>>>any())).thenReturn(txResults);
         assertTrue(rateLimiter.isAllowed("1"));
@@ -42,7 +42,7 @@ public class RateLimiterTest {
 
     @Test
     public void Test_isAllowed_Fail() {
-        List<Long> txResults = Arrays.asList(6L, 7L);
+        List<Long> txResults = Arrays.asList(6L, 7L, 6L);
 
         when(stringTemplate.execute(ArgumentMatchers.<SessionCallback<List<Long>>>any())).thenReturn(txResults);
         assertFalse(rateLimiter.isAllowed("1"));
